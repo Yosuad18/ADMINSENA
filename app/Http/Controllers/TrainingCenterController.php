@@ -17,8 +17,11 @@ class TrainingCenterController extends Controller
     }
 
     public function store(Request $request) {
-        $request->validate(['name' => 'required|string|max:255']);
-        TrainingCenter::create($request->all());
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'address' => 'nullable|string|max:255',
+        ]);
+        TrainingCenter::create($request->only('name', 'address'));
         return redirect()->route('training-centers.index')->with('success', 'Centro creado.');
     }
 
@@ -27,8 +30,11 @@ class TrainingCenterController extends Controller
     }
 
     public function update(Request $request, TrainingCenter $trainingCenter) {
-        $request->validate(['name' => 'required|string|max:255']);
-        $trainingCenter->update($request->all());
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'address' => 'nullable|string|max:255',
+        ]);
+        $trainingCenter->update($request->only('name', 'address'));
         return redirect()->route('training-centers.index')->with('success', 'Centro actualizado.');
     }
 

@@ -8,13 +8,14 @@
 
 <table class="table table-striped bg-white border">
     <thead class="table-dark">
-        <tr><th>ID</th><th>Nombre</th><th>Acciones</th></tr>
+        <tr><th>ID</th><th>Nombre</th><th>Dirección</th><th>Acciones</th></tr>
     </thead>
     <tbody>
         @foreach($trainingCenters as $center)
         <tr>
             <td>{{ $center->id }}</td>
             <td>{{ $center->name }}</td>
+            <td>{{ $center->address }}</td>
             <td>
                 <a href="{{ route('training-centers.edit', $center) }}" class="btn btn-sm btn-warning">Editar</a>
                 <form action="{{ route('training-centers.destroy', $center) }}" method="POST" class="d-inline">
