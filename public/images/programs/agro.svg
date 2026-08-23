@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 560" role="img" aria-label="Ilustración geométrica del programa Gestión Agroempresarial">
+  <!-- Programa: GAE — brote geométrico y sol -->
+  <rect width="800" height="560" fill="#F2F9EC"/>
+  <!-- Sol -->
+  <circle cx="620" cy="130" r="70" fill="#41BC03" opacity="0.25"/>
+  <circle cx="620" cy="130" r="44" fill="#41BC03"/>
+  <!-- Tallo -->
+  <path d="M400 480 V300" stroke="#2E8700" stroke-width="16" stroke-linecap="round"/>
+  <!-- Hojas triangulares -->
+  <path d="M400 340 C330 330 290 280 285 210 C360 218 400 265 400 340 Z" fill="#39A900"/>
+  <path d="M400 300 C470 290 512 240 517 172 C440 180 400 228 400 300 Z" fill="#41BC03"/>
+  <!-- Surcos de cultivo -->
+  <g stroke="#2E8700" stroke-width="10" stroke-linecap="round" opacity="0.5">
+    <line x1="150" y1="480" x2="650" y2="480"/>
+    <line x1="190" y1="515" x2="610" y2="515"/>
+  </g>
+  <!-- Semillas -->
+  <circle cx="255" cy="480" r="11" fill="#00324D"/>
+  <circle cx="545" cy="480" r="11" fill="#00324D"/>
+</svg>

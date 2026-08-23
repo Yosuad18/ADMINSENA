@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('courses', function (Blueprint $table) {
@@ -16,15 +13,12 @@ return new class extends Migration
             $table->string('course_number');
             $table->string('day');
 
-                // Claves foráneas modernas y seguras
+
             $table->foreignId('area_id')->constrained('areas')->onDelete('cascade');
             $table->foreignId('training_center_id')->constrained('training_centers')->onDelete('cascade');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('courses');
