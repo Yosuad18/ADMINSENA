@@ -16,5 +16,7 @@ class Computer extends Model
         'brand',
     ];
 
-    public function apprentice(): HasOne { return $this->hasOne(Apprentice::class); }
+    public function apprentice(): HasOne {
+        return $this->hasOne(Apprentice::class);
+        }
 }

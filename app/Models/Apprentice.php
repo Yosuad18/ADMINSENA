@@ -17,6 +17,10 @@ class Apprentice extends Model
         'computer_id',
     ];
 
-    public function course(): BelongsTo { return $this->belongsTo(Course::class); }
-    public function computer(): BelongsTo { return $this->belongsTo(Computer::class); }
+    public function course(): BelongsTo {
+        return $this->belongsTo(Course::class);
+        }
+    public function computer(): BelongsTo {
+        return $this->belongsTo(Computer::class);
+        }
 }
