@@ -9,14 +9,28 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Apprentice extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'name',
+        'surname',
+        'document',
+        'address',
+        'estrato',
         'email',
-        'cell',        // Corregido según tu migración
+        'cell',
         'course_id',
         'computer_id',
     ];
 
-    public function course(): BelongsTo { return $this->belongsTo(Course::class); }
-    public function computer(): BelongsTo { return $this->belongsTo(Computer::class); }
+    protected $casts = ['estrato' => 'integer'];
+
+    public function course(): BelongsTo
+    {
+        return $this->belongsTo(Course::class);
+    }
+
+    public function computer(): BelongsTo
+    {
+        return $this->belongsTo(Computer::class);
+    }
 }

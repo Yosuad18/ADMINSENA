@@ -16,8 +16,24 @@
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label fw-bold">Jornada / Días</label>
-                    <input type="text" name="day" class="form-control" placeholder="Ej. Diurna - Lunes a Viernes" required>
+                    <label class="form-label fw-bold">Nombre del Programa (público)</label>
+                    <input type="text" name="name" class="form-control" placeholder="Ej. Análisis y Desarrollo de Software">
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Jornada / Días</label>
+                        <input type="text" name="day" class="form-control" placeholder="Ej. Diurna - Lunes a Viernes" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Fecha límite de inscripción</label>
+                        <input type="date" name="deadline" class="form-control">
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Imagen (ruta en public/images/programs)</label>
+                    <input type="text" name="image" class="form-control" placeholder="Ej. images/programs/software.svg (opcional)">
                 </div>
 
                 <div class="mb-3">

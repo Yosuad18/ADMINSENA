@@ -24,8 +24,9 @@
                 <tr>
                     <th>ID</th>
                     <th>Nombre</th>
+                    <th>Documento</th>
                     <th>Correo</th>
-                    <th>Teléfono</th>
+                    <th>Estrato</th>
                     <th>Curso / Ficha</th>
                     <th>Equipo Asignado</th>
                     <th class="text-center">Acciones</th>
@@ -35,9 +36,10 @@
                 @forelse($apprentices as $apprentice)
                     <tr>
                         <td><strong>#{{ $apprentice->id }}</strong></td>
-                        <td>{{ $apprentice->name }}</td>
+                        <td>{{ $apprentice->name }} {{ $apprentice->surname }}</td>
+                        <td>{{ $apprentice->document ?? '—' }}</td>
                         <td>{{ $apprentice->email }}</td>
-                        <td>{{ $apprentice->cell_number }}</td>
+                        <td>{{ $apprentice->estrato ? 'Estrato ' . $apprentice->estrato : '—' }}</td>
                         <td><span class="badge bg-secondary">{{ $apprentice->course->course_number ?? 'Sin curso' }}</span></td>
                         <td>{{ $apprentice->computer->brand ?? 'Sin equipo' }}</td>
                         <td class="text-center">
@@ -55,7 +57,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="text-center text-muted py-4">No hay aprendices registrados.</td>
+                        <td colspan="8" class="text-center text-muted py-4">No hay aprendices registrados.</td>
                     </tr>
                 @endforelse
             </tbody>

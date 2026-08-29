@@ -16,6 +16,7 @@ use App\Http\Controllers\TrainingCenterController;
 Route::get('/', [PublicController::class, 'home'])->name('home');
 Route::get('/quienes-somos', [PublicController::class, 'about'])->name('about');
 Route::get('/programas', [PublicController::class, 'programs'])->name('programs');
+Route::post('/programas/inscripcion', [PublicController::class, 'register'])->name('programs.register');
 
 
 Route::get('/noticias', [PublicController::class, 'news'])->name('news.index');

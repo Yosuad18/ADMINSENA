@@ -18,6 +18,27 @@ return [
         'schedule'   => 'Lunes a viernes, 8:00 a.m. – 5:30 p.m.',
     ],
 
+    'locations' => [
+        [
+            'name'   => 'Centro de Comercio y Servicios',
+            'slug'   => 'comercio-servicios',
+            'accent' => '#7A2FBF',
+            'blurb'  => 'Formación en servicios, gestión empresarial y tecnologías aplicadas al comercio.',
+        ],
+        [
+            'name'   => 'Centro Agropecuario',
+            'slug'   => 'agropecuario',
+            'accent' => '#1769AA',
+            'blurb'  => 'Programas del sector agropecuario y desarrollo rural en la región.',
+        ],
+        [
+            'name'   => 'Ciudad Jardín',
+            'slug'   => 'ciudad-jardin',
+            'accent' => '#41BC03',
+            'blurb'  => 'Oferta tecnológica y del sector salud con ambientes modernos de aprendizaje.',
+        ],
+    ],
+
     'programs' => [
         [
             'slug'       => 'analisis-desarrollo-software',

@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Apprentice;
+use App\Models\Area;
+use App\Models\Course;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Carbon;
 
 class PublicController extends Controller
 {
     public function home()
     {
         return view('public.home', [
-            'programs'      => config('site.programs'),
-            'latestNews'    => collect(config('site.news'))->sortByDesc('date')->take(3)->values(),
+            'programs' => config('site.programs'),
+            'latestNews' => collect(config('site.news'))->sortByDesc('date')->take(3)->values(),
             'upcomingEvent' => collect(config('site.events'))->sortBy('date')->first(),
         ]);
     }
@@ -25,9 +28,64 @@ class PublicController extends Controller
 
     public function programs()
     {
+        $activeCourses = Course::with(['area', 'trainingCenter'])
+            ->whereDate('deadline', '>=', Carbon::today())
+            ->get();
+
+        $locations = collect(config('site.locations'))->map(function ($location) use ($activeCourses) {
+            return [
+                ...$location,
+                'programs' => $activeCourses
+                    ->where('trainingCenter.name', $location['name'])
+                    ->values(),
+            ];
+        })->reject(fn ($section) => $section['programs']->isEmpty())->values();
+
         return view('public.programs', [
-            'programs' => config('site.programs'),
+            'locations' => $locations,
+            'areas' => Area::orderBy('name')->get(),
         ]);
+    }
+
+    public function register(Request $request)
+    {
+        $course = Course::with('trainingCenter')
+            ->whereKey($request->integer('course_id'))
+            ->whereDate('deadline', '>=', Carbon::today())
+            ->first();
+
+        if (! $course) {
+            return back()->withErrors(['course_id' => 'La inscripción para este programa ya no está disponible.']);
+        }
+
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:120'],
+            'surname' => ['required', 'string', 'max:120'],
+            'document' => ['required', 'string', 'max:20'],
+            'address' => ['required', 'string', 'max:255'],
+            'estrato' => ['required', 'integer', 'between:1,6'],
+            'email' => ['required', 'email', 'max:150'],
+        ]);
+
+        $already = Apprentice::where('document', $validated['document'])
+            ->where('course_id', $course->id)
+            ->exists();
+
+        if ($already) {
+            return back()->withErrors(['document' => 'Ya existe una inscripción con este documento para este programa.']);
+        }
+
+        Apprentice::create([
+            'name' => $validated['name'],
+            'surname' => $validated['surname'],
+            'document' => $validated['document'],
+            'address' => $validated['address'],
+            'estrato' => $validated['estrato'],
+            'email' => $validated['email'],
+            'course_id' => $course->id,
+        ]);
+
+        return back()->with('success', "Tu inscripción a «{$course->name}» fue recibida. Confirmaremos tu cupo al correo registrado.");
     }
 
     public function news()
@@ -43,7 +101,6 @@ class PublicController extends Controller
         $article = collect(config('site.news'))->firstWhere('slug', $slug);
 
         abort_if($article === null, 404);
-
 
         $related = collect(config('site.news'))
             ->reject(fn ($item) => $item['slug'] === $slug)
@@ -73,14 +130,13 @@ class PublicController extends Controller
     {
 
         $validated = $request->validate([
-            'name'    => ['required', 'string', 'max:120'],
-            'email'   => ['required', 'email', 'max:150'],
+            'name' => ['required', 'string', 'max:120'],
+            'email' => ['required', 'email', 'max:150'],
             'subject' => ['required', 'string', 'max:180'],
             'message' => ['required', 'string', 'min:20', 'max:2000'],
         ], [
             'message.min' => 'El mensaje debe tener al menos :min caracteres.',
         ]);
-
 
         logger()->info('Mensaje de contacto recibido', $validated);
 
@@ -117,9 +173,9 @@ class PublicController extends Controller
         }
 
         return view('public.search', [
-            'query'       => $request->input('q', ''),
-            'results'     => $results,
-            'total'       => count($results['programs']) + count($results['news']) + count($results['events']),
+            'query' => $request->input('q', ''),
+            'results' => $results,
+            'total' => count($results['programs']) + count($results['news']) + count($results['events']),
         ]);
     }
 
@@ -128,13 +184,11 @@ class PublicController extends Controller
         return redirect()->route('courses.index');
     }
 
-
     private function normalize(string $value): string
     {
         $value = mb_strtolower(trim($value));
 
-
-        $map = ['á'=>'a','é'=>'e','í'=>'i','ó'=>'o','ú'=>'u','ü'=>'u','ñ'=>'n'];
+        $map = ['á' => 'a', 'é' => 'e', 'í' => 'i', 'ó' => 'o', 'ú' => 'u', 'ü' => 'u', 'ñ' => 'n'];
 
         return strtr($value, $map);
     }

@@ -24,9 +24,11 @@
                 <tr>
                     <th>ID</th>
                     <th>N° Ficha / Curso</th>
+                    <th>Programa</th>
                     <th>Jornada</th>
                     <th>Área</th>
                     <th>Centro de Formación</th>
+                    <th>Fecha límite</th>
                     <th class="text-center">Acciones</th>
                 </tr>
             </thead>
@@ -35,9 +37,21 @@
                     <tr>
                         <td><strong>#{{ $course->id }}</strong></td>
                         <td><span class="badge bg-secondary">{{ $course->course_number }}</span></td>
+                        <td>{{ $course->name ?? '—' }}</td>
                         <td>{{ $course->day }}</td>
                         <td>{{ $course->area->name ?? 'Sin área' }}</td>
                         <td>{{ $course->trainingCenter->name ?? 'Sin centro' }}</td>
+                        <td>
+                            @if ($course->deadline)
+                                @if ($course->deadline->lt(\Illuminate\Support\Carbon::today()))
+                                    <span class="badge bg-danger">{{ $course->deadline->format('d/m/Y') }}</span>
+                                @else
+                                    <span class="badge bg-success">{{ $course->deadline->format('d/m/Y') }}</span>
+                                @endif
+                            @else
+                                —
+                            @endif
+                        </td>
                         <td class="text-center">
                             <a href="{{ route('courses.edit', $course) }}" class="btn btn-sm btn-outline-warning">
                                 <i class="fas fa-edit"></i>
@@ -53,7 +67,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="text-center text-muted py-4">No hay cursos registrados.</td>
+                        <td colspan="8" class="text-center text-muted py-4">No hay cursos registrados.</td>
                     </tr>
                 @endforelse
             </tbody>

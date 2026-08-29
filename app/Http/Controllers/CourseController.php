@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Course;
 use App\Models\Area;
-use App\Models\TrainingCenter;
+use App\Models\Course;
 use App\Models\Teacher;
+use App\Models\TrainingCenter;
 use Illuminate\Http\Request;
 
 class CourseController extends Controller
@@ -13,6 +13,7 @@ class CourseController extends Controller
     public function index()
     {
         $courses = Course::with(['area', 'trainingCenter'])->get();
+
         return view('courses.index', compact('courses'));
     }
 
@@ -21,6 +22,7 @@ class CourseController extends Controller
         $areas = Area::all();
         $trainingCenters = TrainingCenter::all();
         $teachers = Teacher::all();
+
         return view('courses.create', compact('areas', 'trainingCenters', 'teachers'));
     }
 
@@ -28,7 +30,10 @@ class CourseController extends Controller
     {
         $request->validate([
             'course_number' => 'required|string|max:255',
+            'name' => 'nullable|string|max:255',
             'day' => 'required|string|max:255',
+            'deadline' => 'nullable|date',
+            'image' => 'nullable|string|max:255',
             'area_id' => 'required|exists:areas,id',
             'training_center_id' => 'required|exists:training_centers,id',
         ]);
@@ -46,6 +51,7 @@ class CourseController extends Controller
         $areas = Area::all();
         $trainingCenters = TrainingCenter::all();
         $teachers = Teacher::all();
+
         return view('courses.edit', compact('course', 'areas', 'trainingCenters', 'teachers'));
     }
 
@@ -53,7 +59,10 @@ class CourseController extends Controller
     {
         $request->validate([
             'course_number' => 'required|string|max:255',
+            'name' => 'nullable|string|max:255',
             'day' => 'required|string|max:255',
+            'deadline' => 'nullable|date',
+            'image' => 'nullable|string|max:255',
             'area_id' => 'required|exists:areas,id',
             'training_center_id' => 'required|exists:training_centers,id',
         ]);
@@ -69,6 +78,7 @@ class CourseController extends Controller
     public function destroy(Course $course)
     {
         $course->delete();
+
         return redirect()->route('courses.index')->with('success', 'Curso eliminado.');
     }
 }
