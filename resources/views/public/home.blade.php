@@ -36,6 +36,8 @@
                     @foreach ($programs as $program)
                         <li class="ribbon__item">
                             <article class="program-card">
+                                <br>
+                                <br>
                                 <figure class="program-card__media">
                                     <img src="{{ asset($program['image']) }}"
                                          alt="" width="400" height="280"
@@ -60,10 +62,11 @@
         </p>
     </section>
 
+
+    <br>
     <section class="about-teaser fade-in-section" aria-labelledby="about-teaser-title">
         <div class="container split">
             <div>
-                <p class="eyebrow">Quiénes somos</p>
                 <h2 id="about-teaser-title" class="section-title">Educación pública que transforma regiones</h2>
                 <p class="section-text">
                     Desde 1957 formamos técnicos, tecnólogos y emprendedores en todos los rincones
