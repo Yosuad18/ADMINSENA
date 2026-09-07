@@ -14,12 +14,14 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        // 1. Crear usuario administrador
         User::factory()->create([
             'name' => 'Administrador ADMISENA',
             'email' => 'admin@sena.edu.co',
             'password' => Hash::make('admin123'),
         ]);
 
+        // 2. Crear Centros de Formación
         $centers = [];
         foreach ([
             'Centro de Comercio y Servicios' => 'Calle 4 No. 2-80, Barrio Centro - Popayán, Cauca',
@@ -29,37 +31,51 @@ class DatabaseSeeder extends Seeder
             $centers[$name] = TrainingCenter::firstOrCreate(['name' => $name], ['address' => $address]);
         }
 
+        // 3. Crear Áreas del SENA
         $areas = [];
-        foreach (['Salud', 'Finanzas', 'Tecnología', 'Belleza', 'Barismo'] as $areaName) {
+        foreach (['Tecnología', 'Finanzas', 'Agroempresarial', 'Industria', 'Logística', 'Salud', 'Belleza', 'Barismo'] as $areaName) {
             $areas[$areaName] = Area::firstOrCreate(['name' => $areaName]);
         }
 
+        // Asignación de variables
         $commerce = $centers['Centro de Comercio y Servicios'];
-        $agro = $centers['Centro Agropecuario'];
-        $jardin = $centers['Ciudad Jardín'];
+        $agro     = $centers['Centro Agropecuario'];
+        $jardin   = $centers['Ciudad Jardín'];
 
-        $tech = $areas['Tecnología'];
-        $health = $areas['Salud'];
-        $fin = $areas['Finanzas'];
-        $beauty = $areas['Belleza'];
-        $bar = $areas['Barismo'];
+        $tech     = $areas['Tecnología'];
+        $fin      = $areas['Finanzas'];
+        $agroArea = $areas['Agroempresarial'];
+        $ind      = $areas['Industria'];
+        $log      = $areas['Logística'];
+        $health   = $areas['Salud'];
+        $beauty   = $areas['Belleza'];
+        $bar      = $areas['Barismo'];
 
         $now = Carbon::now();
 
+        // 4. Listado completo de Ofertas de Formación
         $offerings = [
-            ['ADSO-2738711', 'Análisis y Desarrollo de Software',   'Diurno',   45, $tech,   [$commerce]],
-            ['GRD-2738812', 'Gestión de Redes de Datos',            'Nocturno', 40, $tech,   [$jardin]],
-            ['MEI-2738901', 'Mantenimiento Electrónico Industrial', 'Diurno',    30, $tech,   [$commerce]],
-            ['CF-2739002',  'Contabilidad y Finanzas',              'Diurno',    50, $fin,    [$commerce, $jardin]],
-            ['ENF-2739101', 'Técnico en Enfermería',                'Diurno',    25, $health, [$jardin, $commerce]],
-            ['NUT-2739401', 'Técnico en Nutrición y Dietética',     'Diurno',    38, $health, [$agro]],
-            ['BAR-2739201', 'Barismo y Cafés Especiales',           'Nocturno',  35, $bar,    [$commerce, $agro]],
-            ['BEL-2739301', 'Servicios de Belleza',                 'Diurno',    28, $beauty, [$jardin, $commerce]],
-            ['BEL-2739302', 'Maquillaje Profesional',               'Nocturno',  21, $beauty, [$jardin]],
-            ['CF-2739009',  'Gestión Financiera y de Cartera',      'Nocturno',   4, $fin,    [$commerce]],
-            ['ENF-2739999', 'Auxiliar en Salud Oral (cerrada)',     'Diurno',    -3, $health, [$agro]],
+            // Programas Tecnológicos Solicitados
+            ['ADSO-2738711', 'Análisis y Desarrollo de Software',   'Diurno',   45, $tech,     [$commerce]],
+            ['GRD-2738812',  'Gestión de Redes de Datos',            'Nocturno', 40, $tech,     [$commerce]],
+            ['SEG-2738813',  'Seguridad Informática',                'Nocturno', 30, $tech,     [$commerce]],
+            ['GAG-2738902',  'Gestión Agroempresarial',              'Diurno',   60, $agroArea, [$agro]],
+            ['MEI-2738901',  'Mantenimiento Electrónico Industrial', 'Diurno',   30, $ind,      [$jardin]],
+            ['GLO-2739003',  'Gestión Logística',                    'Diurno',   35, $log,      [$commerce]],
+            ['DIM-2739004',  'Diseño e Integración de Multimedia',   'Diurno',   45, $tech,     [$commerce]],
+            ['CF-2739002',   'Contabilidad y Finanzas',              'Diurno',   50, $fin,      [$commerce, $jardin]],
+
+            // Otros Programas y Cursos Cortos
+            ['ENF-2739101',  'Técnico en Enfermería',                'Diurno',   25, $health,   [$jardin, $commerce]],
+            ['NUT-2739401',  'Técnico en Nutrición y Dietética',     'Diurno',   38, $health,   [$agro]],
+            ['BAR-2739201',  'Barismo y Cafés Especiales',           'Nocturno', 35, $bar,      [$commerce, $agro]],
+            ['BEL-2739301',  'Servicios de Belleza',                 'Diurno',   28, $beauty,   [$jardin, $commerce]],
+            ['BEL-2739302',  'Maquillaje Profesional',               'Nocturno', 21, $beauty,   [$jardin]],
+            ['CF-2739009',   'Gestión Financiera y de Cartera',      'Nocturno',  4, $fin,      [$commerce]],
+            ['ENF-2739999',  'Auxiliar en Salud Oral (cerrada)',     'Diurno',   -3, $health,   [$agro]],
         ];
 
+        // 5. Inserción de Cursos
         foreach ($offerings as [$code, $name, $day, $daysToDeadline, $area, $centerList]) {
             foreach ($centerList as $center) {
                 Course::firstOrCreate(
