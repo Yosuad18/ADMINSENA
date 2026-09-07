@@ -52,7 +52,7 @@
 
                         <figure class="offer-card__media">
                             @if ($program->image)
-                                <img src="{{ asset($program->image) }}" alt="" width="400" height="280" loading="lazy">
+                                <img src="{{ asset('storage/images/' . $program->image) }}" alt="" width="400" height="280" loading="lazy">
                             @else
                                 <span class="offer-card__media-placeholder" aria-hidden="true">
                                     <svg viewBox="0 0 24 24" width="30" height="30" focusable="false">
