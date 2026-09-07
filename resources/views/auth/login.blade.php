@@ -8,7 +8,7 @@
         <div class="container container--narrow">
             <div class="login-card sena-glow-focus">
                 <header class="login-card__head">
-                    <img src="{{ asset('images/Sena.png') }}" alt="" width="56" height="56">
+                    <img src="{{ asset('images/Sena2.jpg') }}" alt="" width="56" height="56">
                     <h1 id="login-title">Acceso institucional</h1>
                     <p>Panel administrativo — uso exclusivo del personal autorizado.</p>
                 </header>
