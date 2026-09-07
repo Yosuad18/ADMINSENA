@@ -98,7 +98,7 @@
     <header class="sena-header py-2">
         <div class="container d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center gap-3">
-                <img src="{{ asset('public/storage/images/Sena2.png') }}" alt="Logo SENA" width="70">
+                <img src="{{ asset('images/sena_2.png') }}" alt="Logo SENA 2" width="70">
                 <div>
                     <h1 class="h4 mb-0 fw-bold" style="color: var(--sena-dark);">Servicio Nacional de Aprendizaje</h1>
                     <small class="text-muted fw-semibold">Sistema de Gestión Institucional</small>

@@ -26,7 +26,7 @@
         <div class="container site-header__inner">
 
             <a href="{{ route('home') }}" class="brand" aria-label="{{ config('site.app.full_name') }} — inicio">
-                <img src="{{ asset('public/storage/images/Sena1.jpg') }}" alt="" width="70" height="150" class="brand__logo">
+                <img src="{{ asset('images/sena_1.png') }}" alt="Logo SENA 1" width="100">
                 <span class="brand__text">
                     <strong class="brand__name">{{ config('site.app.name') }}</strong>
                     <span class="brand__tagline">{{ config('site.app.tagline') }}</span>
