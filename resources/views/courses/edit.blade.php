@@ -8,7 +8,7 @@
                 <i class="fas fa-edit text-success me-2"></i>Editar Curso
             </h3>
 
-            <form action="{{ route('courses.update', $course) }}" method="POST">
+            <form action="{{ route('courses.update', $course) }}" method="POST" enctype="multipart/form-data">
                 @csrf @method('PUT')
                 <div class="mb-3">
                     <label class="form-label fw-bold">Número de Curso / Ficha</label>
@@ -32,8 +32,13 @@
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label fw-bold">Imagen (ruta en public/images/programs)</label>
-                    <input type="text" name="image" class="form-control" value="{{ old('image', $course->image) }}" placeholder="Ej. images/programs/software.svg (opcional)">
+                    <label class="form-label fw-bold">Imagen del Curso</label>
+                    @if($course->image)
+                        <div class="mb-2">
+                            <img src="{{ asset('storage/images/' . $course->image) }}" alt="Imagen actual" width="100" height="100" style="object-fit: cover; border-radius: 5px;">
+                        </div>
+                    @endif
+                    <input type="file" name="image" class="form-control" accept="image/*">
                 </div>
 
                 <div class="mb-3">

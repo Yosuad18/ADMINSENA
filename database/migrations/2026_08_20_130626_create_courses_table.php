@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('course_number');
             $table->string('day');
+            $table->string('image')->nullable();
 
 
             $table->foreignId('area_id')->constrained('areas')->onDelete('cascade');

@@ -8,7 +8,7 @@
                 <i class="fas fa-plus-circle text-success me-2"></i>Crear Nuevo Curso
             </h3>
 
-            <form action="{{ route('courses.store') }}" method="POST">
+            <form action="{{ route('courses.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="mb-3">
                     <label class="form-label fw-bold">Número de Curso / Ficha</label>
@@ -32,8 +32,8 @@
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label fw-bold">Imagen (ruta en public/images/programs)</label>
-                    <input type="text" name="image" class="form-control" placeholder="Ej. images/programs/software.svg (opcional)">
+                    <label class="form-label fw-bold">Imagen del Curso</label>
+                    <input type="file" name="image" class="form-control" accept="image/*">
                 </div>
 
                 <div class="mb-3">

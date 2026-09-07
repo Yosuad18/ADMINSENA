@@ -26,6 +26,7 @@
                     <th>N° Ficha / Curso</th>
                     <th>Programa</th>
                     <th>Jornada</th>
+                    <th>Imagen</th>
                     <th>Área</th>
                     <th>Centro de Formación</th>
                     <th>Fecha límite</th>
@@ -39,6 +40,29 @@
                         <td><span class="badge bg-secondary">{{ $course->course_number }}</span></td>
                         <td>{{ $course->name ?? '—' }}</td>
                         <td>{{ $course->day }}</td>
+                        <td>
+                            <form action="{{ route('courses.updateImage', $course) }}" method="POST" enctype="multipart/form-data" class="d-flex align-items-center gap-2">
+                                @csrf
+                                @method('PUT')
+                                @if($course->image)
+                                    <img
+                                        src="{{ asset('storage/images/' . $course->image) }}"
+                                        alt="Imagen del curso"
+                                        width="60"
+                                        height="60"
+                                        style="object-fit: cover; border-radius: 5px;"
+                                    >
+                                @else
+                                    <span class="text-muted" style="font-size: 0.8rem;">Sin imagen</span>
+                                @endif
+                                <div>
+                                    <input type="file" name="image" class="form-control form-control-sm mb-1" accept="image/*" style="max-width: 160px;" required>
+                                    <button type="submit" class="btn btn-sm btn-outline-success" onclick="return confirm('¿Subir esta imagen?')">
+                                        <i class="fas fa-upload"></i> Subir
+                                    </button>
+                                </div>
+                            </form>
+                        </td>
                         <td>{{ $course->area->name ?? 'Sin área' }}</td>
                         <td>{{ $course->trainingCenter->name ?? 'Sin centro' }}</td>
                         <td>
@@ -67,7 +91,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="8" class="text-center text-muted py-4">No hay cursos registrados.</td>
+                        <td colspan="9" class="text-center text-muted py-4">No hay cursos registrados.</td>
                     </tr>
                 @endforelse
             </tbody>

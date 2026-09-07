@@ -46,11 +46,14 @@ Route::get('/ir-al-panel', [PublicController::class, 'adminPanel'])
     ->middleware('auth')
     ->name('admin.panel');
 
+Route::get('product/pepe', [CourseController::class, 'create']);
+
 Route::middleware('auth')->group(function () {
     Route::resource('areas', AreaController::class);
     Route::resource('computers', ComputerController::class);
     Route::resource('training-centers', TrainingCenterController::class);
     Route::resource('teachers', TeacherController::class);
     Route::resource('courses', CourseController::class);
+    Route::put('courses/{course}/image', [CourseController::class, 'updateImage'])->name('courses.updateImage');
     Route::resource('apprentices', ApprenticeController::class);
 });

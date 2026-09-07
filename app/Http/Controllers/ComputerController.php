@@ -18,7 +18,7 @@ class ComputerController extends Controller
 
     public function store(Request $request) {
         $request->validate([
-            'serial_number' => 'required|unique:computers,serial_number',
+            'number' => 'required|unique:computers,number',
             'brand' => 'required|string|max:255',
         ]);
         Computer::create($request->all());
@@ -31,7 +31,7 @@ class ComputerController extends Controller
 
     public function update(Request $request, Computer $computer) {
         $request->validate([
-            'serial_number' => 'required|unique:computers,serial_number,'.$computer->id,
+            'number' => 'required|unique:computers,number,'.$computer->id,
             'brand' => 'required|string|max:255',
         ]);
         $computer->update($request->all());
