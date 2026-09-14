@@ -11,8 +11,8 @@ use Illuminate\Http\Request;
 class TeacherController extends Controller
 {
     public function index() {
-        $teachers = Teacher::with(['area', 'trainingCenter'])->get();
-        return view('teachers.index', compact('teachers'));
+        $teachers = Teacher::all();
+        return response()->json($teachers);
     }
 
     public function create() {
@@ -22,19 +22,26 @@ class TeacherController extends Controller
         return view('teachers.create', compact('areas', 'trainingCenters', 'courses'));
     }
 
-    public function store(Request $request) {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'area_id' => 'required|exists:areas,id',
-            'training_center_id' => 'required|exists:training_centers,id',
+    public function store(Request $request)
+    {
+        $validatedData = $request->validate([
+            'name'                => 'required|string|max:255',
+            'email'               => 'required|email|max:255|unique:teachers,email',
+            'area_id'             => 'required|exists:areas,id',
+            'training_center_id'  => 'required|exists:training_centers,id',
+            'courses'             => 'nullable|array',
+            'courses.*'           => 'exists:courses,id',
         ]);
-        Teacher::create($request->all());
-        $teacher = Teacher::latest()->first();
+
+        $teacher = Teacher::create($validatedData);
+
         if ($request->has('courses')) {
             $teacher->courses()->sync($request->courses);
         }
-        return redirect()->route('teachers.index')->with('success', 'Instructor registrado.');
+
+        $teacher->load('courses');
+
+        return response()->json($teacher);
     }
 
     public function edit(Teacher $teacher) {

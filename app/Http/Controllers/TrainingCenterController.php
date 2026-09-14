@@ -9,7 +9,7 @@ class TrainingCenterController extends Controller
 {
     public function index() {
         $trainingCenters = TrainingCenter::all();
-        return view('training_centers.index', compact('trainingCenters'));
+        return response()->json($trainingCenters);
     }
 
     public function create() {
@@ -21,8 +21,8 @@ class TrainingCenterController extends Controller
             'name' => 'required|string|max:255',
             'address' => 'nullable|string|max:255',
         ]);
-        TrainingCenter::create($request->only('name', 'address'));
-        return redirect()->route('training-centers.index')->with('success', 'Centro creado.');
+        $trainingCenter = TrainingCenter::create($request->all());
+        return response()->json($trainingCenter);
     }
 
     public function edit(TrainingCenter $trainingCenter) {

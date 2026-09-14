@@ -13,9 +13,8 @@ class CourseController extends Controller
 {
     public function index()
     {
-        $courses = Course::with(['area', 'trainingCenter', 'teachers'])->get();
-
-        return view('courses.index', compact('courses'));
+        $courses = Course::all();
+        return response()->json($courses);
     }
 
     public function create()
@@ -49,10 +48,7 @@ class CourseController extends Controller
             $file->storeAs('public/images', $nombreArchivo);
             $data['image'] = $nombreArchivo;
         }
-
         $course = Course::create($data);
-
-        // Sincronizar profesores rellenando 'name' y 'email' requeridos por la tabla pivote
         if ($request->has('teachers')) {
             $teachersData = [];
             $teachers = Teacher::findMany($request->teachers);
@@ -67,7 +63,9 @@ class CourseController extends Controller
             $course->teachers()->sync($teachersData);
         }
 
-        return redirect()->route('courses.index')->with('success', 'Curso creado con éxito.');
+        $course->load('teachers');
+
+        return response()->json($course);
     }
 
     public function edit(Course $course)
