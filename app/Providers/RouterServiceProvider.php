@@ -20,12 +20,12 @@ class RouterServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        this.ApiRoutes();
+       $this->ApiRoutes();
     }
 
     public function ApiRoutes(): void
     {
-        Route::prefix('v1')
+        Route::prefix('api/v1')
             ->middleware('api')
             ->group(base_path('routes/api.php'));
     }
