@@ -9,7 +9,7 @@ class AreaController extends Controller
 {
     public function index() {
         $areas = Area::all();
-        return view('areas.index', compact('areas'));
+        return response()->json($areas);
     }
 
     public function create() {
@@ -18,8 +18,8 @@ class AreaController extends Controller
 
     public function store(Request $request) {
         $request->validate(['name' => 'required|string|max:255']);
-        Area::create($request->all());
-        return redirect()->route('areas.index')->with('success', 'Área creada exitosamente.');
+        $area = Area::create($request->all());
+        return response()->json($area);
     }
 
     public function edit(Area $area) {

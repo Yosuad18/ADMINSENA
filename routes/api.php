@@ -1,5 +1,5 @@
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ArController;
 
-
-Route::get('/computers', [ComputerController::class, 'index']);
-Route::post('/computers', [ComputerController::class, 'store']);
-
+Route::get('/areas', [AreaController::class, 'index']);
+Route::post('/areas', [AreaController::class, 'store']);
