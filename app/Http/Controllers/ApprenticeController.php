@@ -11,9 +11,9 @@ class ApprenticeController extends Controller
 {
     public function index()
     {
-        $apprentices = Apprentice::all();
+        $apprentices = Apprentice::with(['course', 'computer'])->get();
 
-        return response()->json($apprentices);
+        return view('apprentices.index', compact('apprentices'));
     }
 
     public function create()
@@ -38,9 +38,9 @@ class ApprenticeController extends Controller
             'computer_id' => 'nullable|exists:computers,id',
         ]);
 
-        $apprentice = Apprentice::create($request->all());
+        Apprentice::create($request->all());
 
-        return response()->json($apprentice);
+        return redirect()->route('apprentices.index')->with('success', 'Aprendiz creado con éxito.');
     }
 
     public function edit(Apprentice $apprentice)

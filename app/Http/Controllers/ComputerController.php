@@ -9,7 +9,7 @@ class ComputerController extends Controller
 {
     public function index() {
         $computers = Computer::all();
-        return view('computers.index', compact('computers'));
+        return response()->json($computers);
     }
 
     public function create() {
@@ -21,8 +21,8 @@ class ComputerController extends Controller
             'number' => 'required|unique:computers,number',
             'brand' => 'required|string|max:255',
         ]);
-        Computer::create($request->all());
-        return redirect()->route('computers.index')->with('success', 'Equipo registrado.');
+        $computer = Computer::create($request->all());
+        return response()->json($computer);
     }
 
     public function edit(Computer $computer) {
