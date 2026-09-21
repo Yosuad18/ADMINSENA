@@ -3,49 +3,60 @@
 namespace App\Http\Controllers;
 
 use App\Models\TrainingCenter;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
 class TrainingCenterController extends Controller
 {
-    public function index() {
+    public function index(){
         $trainingCenters = TrainingCenter::all();
-        return response()->json($trainingCenters);
+        return response()->json($trainingCenters, 200);
     }
 
-    public function create() {
-        return view('training_centers.create');
-    }
-
-    public function store(Request $request) {
-        $request->validate([
+    public function store(Request $request){
+        $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'address' => 'nullable|string|max:255',
         ]);
-        $trainingCenter = TrainingCenter::create($request->all());
-        return response()->json($trainingCenter);
+
+        $trainingCenter = TrainingCenter::create($validatedData);
+
+        return response()->json($trainingCenter, 201);
     }
 
-    public function edit(TrainingCenter $trainingCenter) {
-        return view('training_centers.edit', compact('trainingCenter'));
+    public function show(TrainingCenter $trainingCenter){
+        return response()->json($trainingCenter, 200);
     }
 
-    public function update(Request $request, TrainingCenter $trainingCenter) {
-        $request->validate([
+    public function update(Request $request, TrainingCenter $trainingCenter){
+        $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'address' => 'nullable|string|max:255',
         ]);
-        $trainingCenter->update($request->only('name', 'address'));
-        return redirect()->route('training-centers.index')->with('success', 'Centro actualizado.');
+
+        $trainingCenter->update($validatedData);
+
+        return response()->json($trainingCenter, 200);
     }
 
-    public function destroy(TrainingCenter $trainingCenter) {
-        $trainingCenter = TrainingCenter::find($id);
-        if (!$trainingCenter) {
+    public function destroy(TrainingCenter $trainingCenter){
+        try {
+            $trainingCenter->delete();
+
             return response()->json([
-                'message' => 'Centro no encontrado.'
-            ], 404);
+                'message' => 'Centro de formación eliminado con éxito.'
+            ], 200);
+
+        } catch (QueryException $e) {
+            if ($e->getCode() == '23000') {
+                return response()->json([
+                    'message' => 'No se puede eliminar el centro de formación porque tiene áreas, cursos o personal asociados.'
+                ], 409);
+            }
+
+            return response()->json([
+                'message' => 'Error interno al intentar eliminar el registro.'
+            ], 500);
         }
-        $trainingCenter->delete();
-        return response()->json(['message' => 'Centro eliminado.']);
     }
 }
