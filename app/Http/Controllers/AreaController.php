@@ -5,42 +5,29 @@ namespace App\Http\Controllers;
 use App\Models\Area;
 use Illuminate\Http\Request;
 
-class AreaController extends Controller
-{
-    public function index() {
-        $areas = Area::all();
-        return response()->json($areas);
+class AreaController extends Controller{
+    public function index(){
+        return response()->json(Area::all(), 200);
     }
 
-    public function create() {
-        return view('areas.create');
+    public function store(Request $request){
+        $validated = $request->validate(['name' => 'required|string|max:255']);
+        $area = Area::create($validated);
+        return response()->json($area, 201);
     }
 
-    public function store(Request $request) {
-        $request->validate(['name' => 'required|string|max:255']);
-        $area = Area::create($request->all());
-        return response()->json($area);
+    public function show(Area $area){
+        return response()->json($area, 200);
     }
 
-    public function edit(Area $area) {
-        return view('areas.edit', compact('area'));
+    public function update(Request $request, Area $area){
+        $validated = $request->validate(['name' => 'required|string|max:255']);
+        $area->update($validated);
+        return response()->json($area, 200);
     }
 
-    public function update(Request $request, Area $area) {
-        $request->validate(['name' => 'required|string|max:255']);
-        $area->update($request->all());
-        return redirect()->route('areas.index')->with('success', 'Área actualizada.');
-    }
-
-    public function destroy($id) {
-        $area = Area::find($id);
-        if (!$area) {
-            return response()->json([
-                'message' => 'Área no encontrada.'
-            ], 404);
-        }
+    public function destroy(Area $area){
         $area->delete();
-        return response()->json(['message' => 'Área eliminada.']);
+        return response()->json(['message' => 'Área eliminada exitosamente.'], 200);
     }
 }
-

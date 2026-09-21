@@ -2,33 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Area;
 use App\Models\Course;
 use App\Models\Teacher;
-use App\Models\TrainingCenter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
-class CourseController extends Controller
-{
-    public function index()
-    {
-        $courses = Course::all();
-        return response()->json($courses);
+class CourseController extends Controller{
+    public function index(){
+        $courses = Course::with(['area', 'trainingCenter', 'teachers'])->get();
+        return response()->json($courses, 200);
     }
 
-    public function create()
-    {
-        $areas = Area::all();
-        $trainingCenters = TrainingCenter::all();
-        $teachers = Teacher::all();
-
-        return view('courses.create', compact('areas', 'trainingCenters', 'teachers'));
-    }
-
-    public function store(Request $request)
-    {
-        $request->validate([
+    public function store(Request $request){
+        $validated = $request->validate([
             'course_number'      => 'required|string|max:255',
             'name'               => 'nullable|string|max:255',
             'day'                => 'required|string|max:255',
@@ -44,11 +30,13 @@ class CourseController extends Controller
 
         if ($request->hasFile('image')) {
             $file = $request->file('image');
-            $nombreArchivo = "sena_" . time() . "." . $file->guessExtension();
-            $file->storeAs('public/images', $nombreArchivo);
-            $data['image'] = $nombreArchivo;
+            $fileName = "sena_" . time() . "." . $file->guessExtension();
+            $file->storeAs('public/images', $fileName);
+            $data['image'] = $fileName;
         }
+
         $course = Course::create($data);
+
         if ($request->has('teachers')) {
             $teachersData = [];
             $teachers = Teacher::findMany($request->teachers);
@@ -59,27 +47,20 @@ class CourseController extends Controller
                     'email' => $teacher->email,
                 ];
             }
-
             $course->teachers()->sync($teachersData);
         }
 
-        $course->load('teachers');
-
-        return response()->json($course);
+        $course->load(['area', 'trainingCenter', 'teachers']);
+        return response()->json($course, 201);
     }
 
-    public function edit(Course $course)
-    {
-        $areas = Area::all();
-        $trainingCenters = TrainingCenter::all();
-        $teachers = Teacher::all();
-
-        return view('courses.edit', compact('course', 'areas', 'trainingCenters', 'teachers'));
+    public function show(Course $course){
+        $course->load(['area', 'trainingCenter', 'teachers']);
+        return response()->json($course, 200);
     }
 
-    public function update(Request $request, Course $course)
-    {
-        $request->validate([
+    public function update(Request $request, Course $course){
+        $validated = $request->validate([
             'course_number'      => 'required|string|max:255',
             'name'               => 'nullable|string|max:255',
             'day'                => 'required|string|max:255',
@@ -94,20 +75,18 @@ class CourseController extends Controller
         $data = $request->except(['image', 'teachers']);
 
         if ($request->hasFile('image')) {
-            // Eliminar imagen anterior si existe
             if ($course->image) {
                 Storage::delete('public/images/' . $course->image);
             }
 
             $file = $request->file('image');
-            $nombreArchivo = "sena_" . time() . "." . $file->guessExtension();
-            $file->storeAs('public/images', $nombreArchivo);
-            $data['image'] = $nombreArchivo;
+            $fileName = "sena_" . time() . "." . $file->guessExtension();
+            $file->storeAs('public/images', $fileName);
+            $data['image'] = $fileName;
         }
 
         $course->update($data);
 
-        // Sincronizar profesores rindiendo los valores requeridos en la tabla pivote
         if ($request->has('teachers')) {
             $teachersData = [];
             $teachers = Teacher::findMany($request->teachers);
@@ -118,42 +97,21 @@ class CourseController extends Controller
                     'email' => $teacher->email,
                 ];
             }
-
             $course->teachers()->sync($teachersData);
         } else {
             $course->teachers()->detach();
         }
 
-        return redirect()->route('courses.index')->with('success', 'Curso actualizado con éxito.');
+        $course->load(['area', 'trainingCenter', 'teachers']);
+        return response()->json($course, 200);
     }
 
-    public function updateImage(Request $request, Course $course)
-    {
-        $request->validate([
-            'image' => 'required|image|mimes:jpg,png,jpeg,gif|max:2048',
-        ]);
-
+    public function destroy(Course $course){
         if ($course->image) {
             Storage::delete('public/images/' . $course->image);
         }
 
-        $file = $request->file('image');
-        $nombreArchivo = "sena_" . time() . "." . $file->guessExtension();
-        $file->storeAs('public/images', $nombreArchivo);
-
-        $course->update(['image' => $nombreArchivo]);
-
-        return redirect()->route('courses.index')->with('success', 'Imagen actualizada con éxito.');
-    }
-
-    public function destroy(Course $course){
-        $course = Course::find($id);
-        if (!$course) {
-            return response()->json([
-                'message' => 'Curso no encontrado.'
-            ], 404);
-        }
         $course->delete();
-        return response()->json(['message' => 'Curso eliminado.']);
+        return response()->json(['message' => 'Curso eliminado exitosamente.'], 200);
     }
 }

@@ -5,47 +5,38 @@ namespace App\Http\Controllers;
 use App\Models\Computer;
 use Illuminate\Http\Request;
 
-class ComputerController extends Controller
-{
-    public function index() {
-        $computers = Computer::all();
-        return response()->json($computers);
+class ComputerController extends Controller{
+    public function index(){
+        return response()->json(Computer::all(), 200);
     }
 
-    public function create() {
-        return view('computers.create');
-    }
-
-    public function store(Request $request) {
-        $request->validate([
-            'number' => 'required|unique:computers,number',
-            'brand' => 'required|string|max:255',
+    public function store(Request $request){
+        $validated = $request->validate([
+            'number' => 'required|string|unique:computers,number',
+            'brand'  => 'required|string|max:255',
         ]);
-        $computer = Computer::create($request->all());
-        return response()->json($computer);
+
+        $computer = Computer::create($validated);
+        return response()->json($computer, 201);
     }
 
-    public function edit(Computer $computer) {
-        return view('computers.edit', compact('computer'));
+    public function show(Computer $computer){
+        return response()->json($computer, 200);
     }
 
-    public function update(Request $request, Computer $computer) {
-        $request->validate([
-            'number' => 'required|unique:computers,number,'.$computer->id,
-            'brand' => 'required|string|max:255',
+    public function update(Request $request, Computer $computer){
+        $validated = $request->validate([
+            'number' => 'required|string|unique:computers,number,' . $computer->id,
+            'brand'  => 'required|string|max:255',
         ]);
-        $computer->update($request->all());
-        return redirect()->route('computers.index')->with('success', 'Equipo actualizado.');
+
+        $computer->update($validated);
+        return response()->json($computer, 200);
     }
 
-    public function destroy(Computer $computer) {
-        $computer = Computer::find($id);
-        if (!$computer) {
-            return response()->json([
-                'message' => 'Equipo no encontrado.'
-            ], 404);
-        }
+    public function destroy(Computer $computer){
         $computer->delete();
-        return response()->json(['message' => 'Equipo eliminado.']);
+        return response()->json(['message' => 'Equipo eliminado exitosamente.'], 200);
     }
 }
+
