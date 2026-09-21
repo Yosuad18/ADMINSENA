@@ -32,8 +32,14 @@ class AreaController extends Controller
         return redirect()->route('areas.index')->with('success', 'Área actualizada.');
     }
 
-    public function destroy(Area $area) {
+    public function destroy($id) {
+        $area = Area::find($id);
+        if (!$area) {
+            return response()->json([
+                'message' => 'Área no encontrada.'
+            ], 404);
+    }
         $area->delete();
-        return redirect()->route('areas.index')->with('success', 'Área eliminada.');
+        return response()->json(['message' => 'Área eliminada.']);
     }
 }
