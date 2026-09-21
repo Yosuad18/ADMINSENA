@@ -18,5 +18,5 @@ class Computer extends Model
 
     public function apprentice(): HasOne {
         return $this->hasOne(Apprentice::class);
-        }
+    }
 }

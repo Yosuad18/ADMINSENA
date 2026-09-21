@@ -15,8 +15,16 @@ class Course extends Model
 
     protected $casts = ['deadline' => 'date'];
 
-    public function area(): BelongsTo { return $this->belongsTo(Area::class); }
-    public function trainingCenter(): BelongsTo { return $this->belongsTo(TrainingCenter::class); }
-    public function apprentices(): HasMany { return $this->hasMany(Apprentice::class); }
-    public function teachers(): BelongsToMany { return $this->belongsToMany(Teacher::class, 'course_teachers'); }
+    public function area(): BelongsTo {
+        return $this->belongsTo(Area::class);
+    }
+    public function trainingCenter(): BelongsTo {
+        return $this->belongsTo(TrainingCenter::class);
+    }
+    public function apprentices(): HasMany {
+        return $this->hasMany(Apprentice::class);
+    }
+    public function teachers(): BelongsToMany {
+        return $this->belongsToMany(Teacher::class, 'course_teachers');
+    }
 }
