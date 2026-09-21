@@ -35,4 +35,4 @@ Route::delete('/teachers/{id}', [TeacherController::class, 'destroy']);
 
 Route::get('/training-centers', [TrainingCenterController::class, 'index']);
 Route::post('/training-centers', [TrainingCenterController::class, 'store']);
-Route::delete('/training-centers/{id}', [TrainingCenterController::class, 'destroy']);
+Route::delete('/training-centers/{trainingCenter}', [TrainingCenterController::class, 'destroy']);
