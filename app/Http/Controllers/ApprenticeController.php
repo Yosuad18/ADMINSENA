@@ -68,10 +68,14 @@ class ApprenticeController extends Controller
         return redirect()->route('apprentices.index')->with('success', 'Aprendiz actualizado con éxito.');
     }
 
-    public function destroy(Apprentice $apprentice)
-    {
+    public function destroy(Apprentice $apprentice){
+        $apprentice = Apprentice::find($id);
+        if (!$apprentice) {
+            return response()->json([
+                'message' => 'Aprendiz no encontrado.'
+            ], 404);
+        }
         $apprentice->delete();
-
-        return redirect()->route('apprentices.index')->with('success', 'Aprendiz eliminado.');
+        return response()->json(['message' => 'Aprendiz eliminado.']);
     }
 }

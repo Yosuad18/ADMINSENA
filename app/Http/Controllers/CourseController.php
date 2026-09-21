@@ -146,14 +146,14 @@ class CourseController extends Controller
         return redirect()->route('courses.index')->with('success', 'Imagen actualizada con éxito.');
     }
 
-    public function destroy(Course $course)
-    {
-        if ($course->image) {
-            Storage::delete('public/images/' . $course->image);
+    public function destroy(Course $course){
+        $course = Course::find($id);
+        if (!$course) {
+            return response()->json([
+                'message' => 'Curso no encontrado.'
+            ], 404);
         }
-
         $course->delete();
-
-        return redirect()->route('courses.index')->with('success', 'Curso eliminado.');
+        return response()->json(['message' => 'Curso eliminado.']);
     }
 }

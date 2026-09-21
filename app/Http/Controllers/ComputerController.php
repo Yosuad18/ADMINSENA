@@ -39,7 +39,13 @@ class ComputerController extends Controller
     }
 
     public function destroy(Computer $computer) {
+        $computer = Computer::find($id);
+        if (!$computer) {
+            return response()->json([
+                'message' => 'Equipo no encontrado.'
+            ], 404);
+        }
         $computer->delete();
-        return redirect()->route('computers.index')->with('success', 'Equipo eliminado.');
+        return response()->json(['message' => 'Equipo eliminado.']);
     }
 }

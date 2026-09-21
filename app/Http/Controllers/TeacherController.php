@@ -68,7 +68,13 @@ class TeacherController extends Controller
     }
 
     public function destroy(Teacher $teacher) {
+        $teacher = Teacher::find($id);
+        if (!$teacher) {
+            return response()->json([
+                'message' => 'Instructor no encontrado.'
+            ], 404);
+        }
         $teacher->delete();
-        return redirect()->route('teachers.index')->with('success', 'Instructor eliminado.');
+        return response()->json(['message' => 'Instructor eliminado.']);
     }
 }

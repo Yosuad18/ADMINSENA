@@ -39,7 +39,13 @@ class TrainingCenterController extends Controller
     }
 
     public function destroy(TrainingCenter $trainingCenter) {
+        $trainingCenter = TrainingCenter::find($id);
+        if (!$trainingCenter) {
+            return response()->json([
+                'message' => 'Centro no encontrado.'
+            ], 404);
+        }
         $trainingCenter->delete();
-        return redirect()->route('training-centers.index')->with('success', 'Centro eliminado.');
+        return response()->json(['message' => 'Centro eliminado.']);
     }
 }
