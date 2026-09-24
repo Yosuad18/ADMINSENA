@@ -2,51 +2,12 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ChatController;
 use App\Http\Controllers\AreaController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\ComputerController;
-use App\Http\Controllers\PublicController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\ApprenticeController;
 use App\Http\Controllers\TrainingCenterController;
-
-
-
-Route::get('/', [PublicController::class, 'home'])->name('home');
-Route::get('/quienes-somos', [PublicController::class, 'about'])->name('about');
-Route::get('/programas', [PublicController::class, 'programs'])->name('programs');
-Route::post('/programas/inscripcion', [PublicController::class, 'register'])->name('programs.register');
-
-
-Route::get('/noticias', [PublicController::class, 'news'])->name('news.index');
-Route::get('/noticias/{slug}', [PublicController::class, 'newsDetail'])->name('news.show');
-
-Route::get('/eventos', [PublicController::class, 'events'])->name('events');
-
-
-Route::get('/contacto', [PublicController::class, 'contact'])->name('contact');
-Route::post('/contacto', [PublicController::class, 'submitContact'])->name('contact.submit');
-
-
-Route::get('/buscar', [PublicController::class, 'search'])->name('search');
-
-Route::post('/chat', [ChatController::class, 'send'])
-    ->middleware('throttle:10,1')
-    ->name('chat.send');
-
-
-Route::get('/acceso', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/acceso', [AuthController::class, 'login'])->name('login.attempt');
-Route::post('/salir', [AuthController::class, 'logout'])->name('logout');
-
-
-
-Route::get('/ir-al-panel', [PublicController::class, 'adminPanel'])
-    ->middleware('auth')
-    ->name('admin.panel');
-
-Route::get('product/pepe', [CourseController::class, 'create']);
 
 Route::middleware('auth')->group(function () {
     Route::resource('areas', AreaController::class);
@@ -57,3 +18,21 @@ Route::middleware('auth')->group(function () {
     Route::put('courses/{course}/image', [CourseController::class, 'updateImage'])->name('courses.updateImage');
     Route::resource('apprentices', ApprenticeController::class);
 });
+
+Route::post('/acceso', [AuthController::class, 'login'])->name('login.attempt');
+Route::post('/salir', [AuthController::class, 'logout'])->name('logout');
+
+Route::get('/api/user', function () {
+    if (auth()->check()) {
+        return response()->json([
+            'id'    => auth()->id(),
+            'name'  => auth()->user()->name,
+            'email' => auth()->user()->email,
+        ]);
+    }
+    return response()->json(null, 401);
+});
+
+Route::get('/{any?}', function () {
+    return view('welcome');
+})->where('any', '.*');
