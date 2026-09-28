@@ -1,6 +1,5 @@
 <?php
 
 return [
-    App\Providers\AppServiceProvider::class,
-    App\Providers\RouterServiceProvider::class,
+    App\Providers\RouterServiceProvider::class
 ];
