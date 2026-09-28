@@ -26,8 +26,8 @@ class ComputerController extends Controller{
 
     public function update(Request $request, Computer $computer){
         $validated = $request->validate([
-            'number' => 'required|string|unique:computers,number,' . $computer->id,
-            'brand'  => 'required|string|max:255',
+            'number' => 'sometimes|required|string|unique:computers,number,' . $computer->id,
+            'brand'  => 'sometimes|required|string|max:255',
         ]);
 
         $computer->update($validated);

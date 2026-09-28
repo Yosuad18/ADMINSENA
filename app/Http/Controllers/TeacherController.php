@@ -21,11 +21,13 @@ class TeacherController extends Controller{
             'courses.*'          => 'exists:courses,id',
         ]);
 
+        $courseIds = $validated['courses'] ?? [];
+        unset($validated['courses']);
         $teacher = Teacher::create($validated);
 
         if ($request->has('courses')) {
             $pivotData = [];
-            foreach ($request->courses as $courseId) {
+            foreach ($courseIds as $courseId) {
                 $pivotData[$courseId] = [
                     'name'  => $teacher->name,
                     'email' => $teacher->email,
@@ -45,27 +47,28 @@ class TeacherController extends Controller{
 
     public function update(Request $request, Teacher $teacher){
         $validated = $request->validate([
-            'name'               => 'required|string|max:255',
-            'email'              => 'required|email|max:255|unique:teachers,email,' . $teacher->id,
-            'area_id'            => 'required|exists:areas,id',
-            'training_center_id' => 'required|exists:training_centers,id',
-            'courses'            => 'nullable|array',
+            'name'               => 'sometimes|required|string|max:255',
+            'email'              => 'sometimes|required|email|max:255|unique:teachers,email,' . $teacher->id,
+            'area_id'            => 'sometimes|required|exists:areas,id',
+            'training_center_id' => 'sometimes|required|exists:training_centers,id',
+            'courses'            => 'sometimes|nullable|array',
             'courses.*'          => 'exists:courses,id',
         ]);
 
+        $courseIds = $validated['courses'] ?? null;
+        $hasCourses = array_key_exists('courses', $validated);
+        unset($validated['courses']);
         $teacher->update($validated);
 
-        if ($request->has('courses')) {
+        if ($hasCourses) {
             $pivotData = [];
-            foreach ($request->courses as $courseId) {
+            foreach ($courseIds ?? [] as $courseId) {
                 $pivotData[$courseId] = [
                     'name'  => $teacher->name,
                     'email' => $teacher->email,
                 ];
             }
             $teacher->courses()->sync($pivotData);
-        } else {
-            $teacher->courses()->detach();
         }
 
         $teacher->load(['area', 'trainingCenter', 'courses']);

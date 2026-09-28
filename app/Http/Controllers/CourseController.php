@@ -26,7 +26,8 @@ class CourseController extends Controller{
             'teachers.*'         => 'exists:teachers,id',
         ]);
 
-        $data = $request->except(['image', 'teachers']);
+        $data = $validated;
+        unset($data['image'], $data['teachers']);
 
         if ($request->hasFile('image')) {
             $file = $request->file('image');
@@ -61,18 +62,19 @@ class CourseController extends Controller{
 
     public function update(Request $request, Course $course){
         $validated = $request->validate([
-            'course_number'      => 'required|string|max:255',
-            'name'               => 'nullable|string|max:255',
-            'day'                => 'required|string|max:255',
-            'deadline'           => 'nullable|date',
-            'image'              => 'nullable|image|mimes:jpg,png,jpeg,gif|max:2048',
-            'area_id'            => 'required|exists:areas,id',
-            'training_center_id' => 'required|exists:training_centers,id',
-            'teachers'           => 'nullable|array',
+            'course_number'      => 'sometimes|required|string|max:255',
+            'name'               => 'sometimes|nullable|string|max:255',
+            'day'                => 'sometimes|required|string|max:255',
+            'deadline'           => 'sometimes|nullable|date',
+            'image'              => 'sometimes|nullable|image|mimes:jpg,png,jpeg,gif|max:2048',
+            'area_id'            => 'sometimes|required|exists:areas,id',
+            'training_center_id' => 'sometimes|required|exists:training_centers,id',
+            'teachers'           => 'sometimes|nullable|array',
             'teachers.*'         => 'exists:teachers,id',
         ]);
 
-        $data = $request->except(['image', 'teachers']);
+        $data = $validated;
+        unset($data['image'], $data['teachers']);
 
         if ($request->hasFile('image')) {
             if ($course->image) {
@@ -87,9 +89,9 @@ class CourseController extends Controller{
 
         $course->update($data);
 
-        if ($request->has('teachers')) {
+        if (array_key_exists('teachers', $validated)) {
             $teachersData = [];
-            $teachers = Teacher::findMany($request->teachers);
+            $teachers = Teacher::findMany($validated['teachers'] ?? []);
 
             foreach ($teachers as $teacher) {
                 $teachersData[$teacher->id] = [
@@ -98,8 +100,6 @@ class CourseController extends Controller{
                 ];
             }
             $course->teachers()->sync($teachersData);
-        } else {
-            $course->teachers()->detach();
         }
 
         $course->load(['area', 'trainingCenter', 'teachers']);

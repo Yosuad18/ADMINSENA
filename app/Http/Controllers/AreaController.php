@@ -21,7 +21,7 @@ class AreaController extends Controller{
     }
 
     public function update(Request $request, Area $area){
-        $validated = $request->validate(['name' => 'required|string|max:255']);
+        $validated = $request->validate(['name' => 'sometimes|required|string|max:255']);
         $area->update($validated);
         return response()->json($area, 200);
     }

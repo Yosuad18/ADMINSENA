@@ -26,8 +26,8 @@ class TrainingCenterController extends Controller{
 
     public function update(Request $request, TrainingCenter $trainingCenter){
         $validated = $request->validate([
-            'name'    => 'required|string|max:255',
-            'address' => 'nullable|string|max:255',
+            'name'    => 'sometimes|required|string|max:255',
+            'address' => 'sometimes|nullable|string|max:255',
         ]);
 
         $trainingCenter->update($validated);
