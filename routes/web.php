@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\AreaController;
 use App\Http\Controllers\CourseController;
@@ -36,11 +37,12 @@ Route::post('/chat', [ChatController::class, 'send'])
     ->name('chat.send');
 
 
-Route::get('/ir-al-panel', [AdminController::class, 'index'])->name('admin.panel');
+Route::get('/ir-al-panel', [DashboardController::class, 'index'])->name('admin.panel');
 
 Route::get('product/pepe', [CourseController::class, 'create']);
 
 Route::resource('areas', AreaController::class);
+Route::resource('admins', AdminController::class);
 Route::resource('computers', ComputerController::class);
 Route::resource('training-centers', TrainingCenterController::class);
 Route::resource('teachers', TeacherController::class);

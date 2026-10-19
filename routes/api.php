@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AreaController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ApprenticeController;
 use App\Http\Controllers\ComputerController;
 use App\Http\Controllers\CourseController;
@@ -49,4 +50,11 @@ Route::post('/training-centers', [TrainingCenterController::class, 'store']);
 Route::get('/training-centers/{trainingCenter}', [TrainingCenterController::class, 'show']);
 Route::put('/training-centers/{trainingCenter}', [TrainingCenterController::class, 'update']);
 Route::delete('/training-centers/{trainingCenter}', [TrainingCenterController::class, 'destroy']);
+
+
+Route::get('/admins', [AdminController::class, 'index']);
+Route::post('/admins', [AdminController::class, 'store']);
+Route::get('/admins/{admin}', [AdminController::class, 'show']);
+Route::put('/admins/{admin}', [AdminController::class, 'update']);
+Route::delete('/admins/{admin}', [AdminController::class, 'destroy']);
 
