@@ -70,11 +70,7 @@
                 </ul>
 
                 <div class="primary-nav__actions">
-                    @auth
-                        <a href="{{ route('admin.panel') }}" class="btn btn--light">Administración</a>
-                    @else
-                        <a href="{{ route('login') }}" class="btn btn--light">Ingresar</a>
-                    @endauth
+                    <a href="{{ route('admin.panel') }}" class="btn btn--light">Administración</a>
                 </div>
             </nav>
         </div>

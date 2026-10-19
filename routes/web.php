@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\AreaController;
 use App\Http\Controllers\CourseController;
@@ -36,24 +36,14 @@ Route::post('/chat', [ChatController::class, 'send'])
     ->name('chat.send');
 
 
-Route::get('/acceso', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/acceso', [AuthController::class, 'login'])->name('login.attempt');
-Route::post('/salir', [AuthController::class, 'logout'])->name('logout');
-
-
-
-Route::get('/ir-al-panel', [PublicController::class, 'adminPanel'])
-    ->middleware('auth')
-    ->name('admin.panel');
+Route::get('/ir-al-panel', [AdminController::class, 'index'])->name('admin.panel');
 
 Route::get('product/pepe', [CourseController::class, 'create']);
 
-Route::middleware('auth')->group(function () {
-    Route::resource('areas', AreaController::class);
-    Route::resource('computers', ComputerController::class);
-    Route::resource('training-centers', TrainingCenterController::class);
-    Route::resource('teachers', TeacherController::class);
-    Route::resource('courses', CourseController::class);
-    Route::put('courses/{course}/image', [CourseController::class, 'updateImage'])->name('courses.updateImage');
-    Route::resource('apprentices', ApprenticeController::class);
-});
+Route::resource('areas', AreaController::class);
+Route::resource('computers', ComputerController::class);
+Route::resource('training-centers', TrainingCenterController::class);
+Route::resource('teachers', TeacherController::class);
+Route::resource('courses', CourseController::class);
+Route::put('courses/{course}/image', [CourseController::class, 'updateImage'])->name('courses.updateImage');
+Route::resource('apprentices', ApprenticeController::class);

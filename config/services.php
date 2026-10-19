@@ -25,4 +25,8 @@ return [
         'model' => env('OPENAI_MODEL', 'gpt-4o-mini'),
     ],
 
+    'admin_api' => [
+        'base_url' => env('ADMINSENA_API_URL'),
+    ],
+
 ];
