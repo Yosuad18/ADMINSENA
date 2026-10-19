@@ -5,13 +5,16 @@ namespace App\Http\Controllers;
 use App\Models\Apprentice;
 use Illuminate\Http\Request;
 
-class ApprenticeController extends Controller{
-    public function index(){
+class ApprenticeController extends Controller
+{
+    public function index()
+    {
         $apprentices = Apprentice::with(['course', 'computer'])->get();
-        return response()->json($apprentices, 200);
+        return view('apprentices.index', compact('apprentices'));
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         $validated = $request->validate([
             'name'        => 'required|string|max:255',
             'surname'     => 'nullable|string|max:255',
@@ -24,34 +27,33 @@ class ApprenticeController extends Controller{
             'computer_id' => 'nullable|exists:computers,id',
         ]);
 
-        $apprentice = Apprentice::create($validated);
-        return response()->json($apprentice, 201);
+        Apprentice::create($validated);
+
+        return redirect()->route('apprentices.index')->with('success', 'Aprendiz creado exitosamente.');
     }
 
-    public function show(Apprentice $apprentice){
-        $apprentice->load(['course', 'computer']);
-        return response()->json($apprentice, 200);
-    }
-
-    public function update(Request $request, Apprentice $apprentice){
+    public function update(Request $request, Apprentice $apprentice)
+    {
         $validated = $request->validate([
-            'name'        => 'sometimes|required|string|max:255',
-            'surname'     => 'sometimes|nullable|string|max:255',
-            'document'    => 'sometimes|nullable|string|max:255',
-            'address'     => 'sometimes|nullable|string|max:255',
-            'estrato'     => 'sometimes|nullable|integer|between:1,6',
-            'email'       => 'sometimes|required|email|unique:apprentices,email,' . $apprentice->id,
-            'cell'        => 'sometimes|nullable|string|max:255',
-            'course_id'   => 'sometimes|required|exists:courses,id',
-            'computer_id' => 'sometimes|nullable|exists:computers,id',
+            'name'        => 'required|string|max:255',
+            'surname'     => 'nullable|string|max:255',
+            'document'    => 'nullable|string|max:255',
+            'address'     => 'nullable|string|max:255',
+            'estrato'     => 'nullable|integer|between:1,6',
+            'email'       => 'required|email|unique:apprentices,email,' . $apprentice->id,
+            'cell'        => 'nullable|string|max:255',
+            'course_id'   => 'required|exists:courses,id',
+            'computer_id' => 'nullable|exists:computers,id',
         ]);
 
         $apprentice->update($validated);
-        return response()->json($apprentice, 200);
+
+        return redirect()->route('apprentices.index')->with('success', 'Aprendiz actualizado exitosamente.');
     }
 
-    public function destroy(Apprentice $apprentice){
+    public function destroy(Apprentice $apprentice)
+    {
         $apprentice->delete();
-        return response()->json(['message' => 'Aprendiz eliminado exitosamente.'], 200);
+        return redirect()->route('apprentices.index')->with('success', 'Aprendiz eliminado exitosamente.');
     }
 }

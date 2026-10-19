@@ -8,6 +8,17 @@
                 <i class="fas fa-user-edit text-success me-2"></i>Editar Aprendiz
             </h3>
 
+            {{-- Mostrar errores de validación si los hay --}}
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul class="mb-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <form action="{{ route('apprentices.update', $apprentice) }}" method="POST">
                 @csrf
                 @method('PUT')
@@ -48,9 +59,10 @@
                     <input type="email" name="email" value="{{ old('email', $apprentice->email) }}" class="form-control" required>
                 </div>
 
+                {{-- Se corrigió name="cell_number" por name="cell" --}}
                 <div class="mb-3">
                     <label class="form-label fw-bold">Celular</label>
-                    <input type="text" name="cell_number" value="{{ old('cell_number', $apprentice->cell) }}" class="form-control" required>
+                    <input type="text" name="cell" value="{{ old('cell', $apprentice->cell) }}" class="form-control">
                 </div>
 
                 <div class="mb-3">
