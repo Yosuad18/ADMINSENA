@@ -20,10 +20,19 @@ class AreaController extends Controller{
         return response()->json($area, 200);
     }
 
+    public function edit(Area $area){
+        return view('areas.edit', compact('area'));
+    }
+
     public function update(Request $request, Area $area){
         $validated = $request->validate(['name' => 'sometimes|required|string|max:255']);
         $area->update($validated);
-        return response()->json($area, 200);
+
+        if ($request->expectsJson()) {
+            return response()->json($area, 200);
+        }
+
+        return redirect()->route('admin.panel')->with('success', 'Área actualizada exitosamente.');
     }
 
     public function destroy(Area $area){

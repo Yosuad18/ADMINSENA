@@ -109,6 +109,13 @@
     </span>
 </div>
 
+@if (session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+    </div>
+@endif
+
 <nav class="panel-toc" aria-label="Ir a tabla">
     @foreach ([
         ['areas', 'Áreas', 'fa-layer-group'],
@@ -379,7 +386,11 @@
                                         'surname' => $apprentice->surname,
                                         'document' => $apprentice->document,
                                         'address' => $apprentice->address,
-                                        'estrato' => $apprentice->estrato
+                                        'estrato' => $apprentice->estrato,
+                                        'email' => $apprentice->email,
+                                        'cell' => $apprentice->cell,
+                                        'course_id' => $apprentice->course_id,
+                                        'computer_id' => $apprentice->computer_id
                                     ]) }})">
                                     <i class="fas fa-pen"></i>
                                 </button>

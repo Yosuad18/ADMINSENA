@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Apprentice;
+use App\Models\Computer;
+use App\Models\Course;
 use Illuminate\Http\Request;
 
 class ApprenticeController extends Controller
@@ -11,6 +13,15 @@ class ApprenticeController extends Controller
     {
         $apprentices = Apprentice::with(['course', 'computer'])->get();
         return view('apprentices.index', compact('apprentices'));
+    }
+
+    public function edit(Apprentice $apprentice)
+    {
+        return view('apprentices.edit', [
+            'apprentice' => $apprentice,
+            'courses' => Course::all(),
+            'computers' => Computer::all(),
+        ]);
     }
 
     public function store(Request $request)
@@ -47,6 +58,10 @@ class ApprenticeController extends Controller
         ]);
 
         $apprentice->update($validated);
+
+        if ($request->expectsJson()) {
+            return response()->json($apprentice, 200);
+        }
 
         return redirect()->route('apprentices.index')->with('success', 'Aprendiz actualizado exitosamente.');
     }

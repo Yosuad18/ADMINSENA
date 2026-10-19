@@ -24,6 +24,10 @@ class TrainingCenterController extends Controller{
         return response()->json($trainingCenter, 200);
     }
 
+    public function edit(TrainingCenter $trainingCenter){
+        return view('training_centers.edit', compact('trainingCenter'));
+    }
+
     public function update(Request $request, TrainingCenter $trainingCenter){
         $validated = $request->validate([
             'name'    => 'sometimes|required|string|max:255',
@@ -31,7 +35,12 @@ class TrainingCenterController extends Controller{
         ]);
 
         $trainingCenter->update($validated);
-        return response()->json($trainingCenter, 200);
+
+        if ($request->expectsJson()) {
+            return response()->json($trainingCenter, 200);
+        }
+
+        return redirect()->route('admin.panel')->with('success', 'Centro de formación actualizado exitosamente.');
     }
 
     public function destroy(TrainingCenter $trainingCenter){

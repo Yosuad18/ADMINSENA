@@ -20,10 +20,19 @@ class AdminController extends Controller{
         return response()->json($admin, 200);
     }
 
+    public function edit(Admin $admin){
+        return view('admins.edit', compact('admin'));
+    }
+
     public function update(Request $request, Admin $admin){
         $validated = $request->validate(['name' => 'sometimes|required|string|max:255']);
         $admin->update($validated);
-        return response()->json($admin, 200);
+
+        if ($request->expectsJson()) {
+            return response()->json($admin, 200);
+        }
+
+        return redirect()->route('admin.panel')->with('success', 'Administrador actualizado exitosamente.');
     }
 
     public function destroy(Admin $admin){

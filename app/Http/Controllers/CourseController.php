@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Course;
 use App\Models\Teacher;
+use App\Models\Area;
+use App\Models\TrainingCenter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -60,6 +62,17 @@ class CourseController extends Controller{
         return response()->json($course, 200);
     }
 
+    public function edit(Course $course){
+        $course->load('teachers');
+
+        return view('courses.edit', [
+            'course' => $course,
+            'areas' => Area::all(),
+            'trainingCenters' => TrainingCenter::all(),
+            'teachers' => Teacher::all(),
+        ]);
+    }
+
     public function update(Request $request, Course $course){
         $validated = $request->validate([
             'course_number'      => 'sometimes|required|string|max:255',
@@ -103,7 +116,12 @@ class CourseController extends Controller{
         }
 
         $course->load(['area', 'trainingCenter', 'teachers']);
-        return response()->json($course, 200);
+
+        if ($request->expectsJson()) {
+            return response()->json($course, 200);
+        }
+
+        return redirect()->route('admin.panel')->with('success', 'Curso actualizado exitosamente.');
     }
 
     public function destroy(Course $course){

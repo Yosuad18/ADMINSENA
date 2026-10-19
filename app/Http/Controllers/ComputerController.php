@@ -24,6 +24,10 @@ class ComputerController extends Controller{
         return response()->json($computer, 200);
     }
 
+    public function edit(Computer $computer){
+        return view('computers.edit', compact('computer'));
+    }
+
     public function update(Request $request, Computer $computer){
         $validated = $request->validate([
             'number' => 'sometimes|required|string|unique:computers,number,' . $computer->id,
@@ -31,7 +35,12 @@ class ComputerController extends Controller{
         ]);
 
         $computer->update($validated);
-        return response()->json($computer, 200);
+
+        if ($request->expectsJson()) {
+            return response()->json($computer, 200);
+        }
+
+        return redirect()->route('admin.panel')->with('success', 'Equipo actualizado exitosamente.');
     }
 
     public function destroy(Computer $computer){
@@ -39,4 +48,3 @@ class ComputerController extends Controller{
         return response()->json(['message' => 'Equipo eliminado exitosamente.'], 200);
     }
 }
-

@@ -2,6 +2,15 @@
 
 @section('content')
 <h2>Editar Centro de Formación</h2>
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul class="mb-0">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 <form action="{{ route('training-centers.update', $trainingCenter) }}" method="POST" class="bg-white p-4 rounded border">
     @csrf
     @method('PUT')
@@ -14,6 +23,6 @@
         <input type="text" name="address" class="form-control" value="{{ old('address', $trainingCenter->address) }}" placeholder="Ej: Calle 4 No. 2-80, Popayán, Cauca">
     </div>
     <button type="submit" class="btn btn-success">Actualizar</button>
-    <a href="{{ route('training-centers.index') }}" class="btn btn-secondary">Cancelar</a>
+    <a href="{{ route('admin.panel') }}" class="btn btn-secondary">Cancelar</a>
 </form>
 @endsection

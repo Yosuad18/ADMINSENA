@@ -8,6 +8,16 @@
                 <i class="fas fa-edit text-success me-2"></i>Editar Equipo
             </h3>
 
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul class="mb-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <form action="{{ route('computers.update', $computer) }}" method="POST">
                 @csrf
                 @method('PUT')
@@ -22,7 +32,7 @@
                 </div>
 
                 <div class="d-flex justify-content-end gap-2">
-                    <a href="{{ route('computers.index') }}" class="btn btn-secondary">Cancelar</a>
+                    <a href="{{ route('admin.panel') }}" class="btn btn-secondary">Cancelar</a>
                     <button type="submit" class="btn btn-sena">
                         <i class="fas fa-save me-1"></i> Actualizar Equipo
                     </button>

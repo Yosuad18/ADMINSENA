@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Teacher;
+use App\Models\Area;
+use App\Models\Course;
+use App\Models\TrainingCenter;
 use Illuminate\Http\Request;
 
 class TeacherController extends Controller{
@@ -45,6 +48,17 @@ class TeacherController extends Controller{
         return response()->json($teacher, 200);
     }
 
+    public function edit(Teacher $teacher){
+        $teacher->load('courses');
+
+        return view('teachers.edit', [
+            'teacher' => $teacher,
+            'areas' => Area::all(),
+            'trainingCenters' => TrainingCenter::all(),
+            'courses' => Course::all(),
+        ]);
+    }
+
     public function update(Request $request, Teacher $teacher){
         $validated = $request->validate([
             'name'               => 'sometimes|required|string|max:255',
@@ -72,7 +86,12 @@ class TeacherController extends Controller{
         }
 
         $teacher->load(['area', 'trainingCenter', 'courses']);
-        return response()->json($teacher, 200);
+
+        if ($request->expectsJson()) {
+            return response()->json($teacher, 200);
+        }
+
+        return redirect()->route('admin.panel')->with('success', 'Instructor actualizado exitosamente.');
     }
 
     public function destroy(Teacher $teacher){
