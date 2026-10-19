@@ -545,11 +545,16 @@ let currentKey = null;
 let currentId = null;
 
 const modalEl = document.getElementById('crudModal');
-const crudModal = new bootstrap.Modal(modalEl);
+let crudModal = null;
 const crudForm = document.getElementById('crudForm');
 const modalFields = document.getElementById('modalFields');
 const modalErrors = document.getElementById('modalErrors');
 const crudModalTitle = document.getElementById('crudModalTitle');
+
+function showCrudModal() {
+    if (!crudModal) crudModal = new bootstrap.Modal(modalEl);
+    crudModal.show();
+}
 
 function buildField(field, value) {
     const wrap = document.createElement('div');
@@ -608,7 +613,7 @@ function openCreate(key) {
     modalFields.innerHTML = '';
     config.fields.forEach(f => modalFields.appendChild(buildField(f, '')));
 
-    crudModal.show();
+    showCrudModal();
 }
 
 function openEdit(key, id, data) {
@@ -621,7 +626,7 @@ function openEdit(key, id, data) {
     modalFields.innerHTML = '';
     config.fields.forEach(f => modalFields.appendChild(buildField(f, data[f.name])));
 
-    crudModal.show();
+    showCrudModal();
 }
 
 crudForm.addEventListener('submit', async (e) => {
