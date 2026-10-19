@@ -396,46 +396,6 @@
     </div>
 </section>
 
-{{-- Administradores --}}
-<section class="panel-section" id="section-admins">
-    <div class="panel-section__head">
-        <h3 class="panel-section__title">
-            <span class="panel-section__icon"><i class="fas fa-user-shield"></i></span>
-            Administradores
-            <span class="badge bg-secondary rounded-pill">{{ $admins->count() }}</span>
-        </h3>
-        <button type="button" class="btn btn-sena btn-sm" onclick="openCreate('admins')">
-            <i class="fas fa-plus me-1"></i> Nuevo
-        </button>
-    </div>
-    <div class="panel-section__body">
-        @if ($admins->isEmpty())
-            <div class="panel-empty">No hay administradores registrados.</div>
-        @else
-            <table class="table table-sena table-hover align-middle">
-                <thead><tr><th>#</th><th>Nombre</th><th class="text-end">Acciones</th></tr></thead>
-                <tbody>
-                    @foreach ($admins as $admin)
-                        <tr>
-                            <td>{{ $admin->id }}</td>
-                            <td>{{ $admin->name }}</td>
-                            <td class="text-end">
-                                <button type="button" class="btn btn-outline-primary btn-sm"
-                                        onclick="openEdit('admins', {{ $admin->id }}, @json(['name' => $admin->name]) )">
-                                    <i class="fas fa-pen"></i>
-                                </button>
-                                <button type="button" class="btn btn-outline-danger btn-sm"
-                                        onclick="destroy('admins', {{ $admin->id }})">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        @endif
-    </div>
-</section>
 
 {{-- Modal genérico crear / editar --}}
 <div class="modal fade" id="crudModal" tabindex="-1" aria-hidden="true">
