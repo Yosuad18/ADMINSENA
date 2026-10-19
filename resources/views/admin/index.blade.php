@@ -155,7 +155,8 @@
                             <td>{{ $area->name }}</td>
                             <td class="text-end">
                                 <button type="button" class="btn btn-outline-primary btn-sm"
-                                        onclick="openEdit('areas', {{ $area->id }}, @json(['name' => $area->name]) )">
+                                        data-edit-table="areas" data-record-id="{{ $area->id }}"
+                                        data-record="{{ json_encode(['name' => $area->name]) }}">
                                     <i class="fas fa-pen"></i>
                                 </button>
                                 <button type="button" class="btn btn-outline-danger btn-sm"
@@ -197,7 +198,8 @@
                             <td>{{ $tc->address }}</td>
                             <td class="text-end">
                                 <button type="button" class="btn btn-outline-primary btn-sm"
-                                        onclick="openEdit('training-centers', {{ $tc->id }}, @json(['name' => $tc->name, 'address' => $tc->address]) )">
+                                        data-edit-table="training-centers" data-record-id="{{ $tc->id }}"
+                                        data-record="{{ json_encode(['name' => $tc->name, 'address' => $tc->address]) }}">
                                     <i class="fas fa-pen"></i>
                                 </button>
                                 <button type="button" class="btn btn-outline-danger btn-sm"
@@ -239,7 +241,8 @@
                             <td>{{ $computer->brand }}</td>
                             <td class="text-end">
                                 <button type="button" class="btn btn-outline-primary btn-sm"
-                                        onclick="openEdit('computers', {{ $computer->id }}, @json(['number' => $computer->number, 'brand' => $computer->brand]) )">
+                                        data-edit-table="computers" data-record-id="{{ $computer->id }}"
+                                        data-record="{{ json_encode(['number' => $computer->number, 'brand' => $computer->brand]) }}">
                                     <i class="fas fa-pen"></i>
                                 </button>
                                 <button type="button" class="btn btn-outline-danger btn-sm"
@@ -283,7 +286,8 @@
                             <td>{{ $teacher->trainingCenter?->name }}</td>
                             <td class="text-end">
                                 <button type="button" class="btn btn-outline-primary btn-sm"
-                                    onclick="openEdit('teachers', {{ $teacher->id }}, {{ json_encode(['name' => $teacher->name, 'email' => $teacher->email, 'area_id' => $teacher->area_id, 'training_center_id' => $teacher->training_center_id]) }})">
+                                    data-edit-table="teachers" data-record-id="{{ $teacher->id }}"
+                                    data-record="{{ json_encode(['name' => $teacher->name, 'email' => $teacher->email, 'area_id' => $teacher->area_id, 'training_center_id' => $teacher->training_center_id]) }}">
                                     <i class="fas fa-pen"></i>
                                 </button>
                                 <button type="button" class="btn btn-outline-danger btn-sm"
@@ -329,14 +333,15 @@
                             <td>{{ $course->trainingCenter?->name }}</td>
                             <td class="text-end">
                                 <button type="button" class="btn btn-outline-primary btn-sm"
-                                    onclick="openEdit('courses', {{ $course->id }}, {{ json_encode([
+                                    data-edit-table="courses" data-record-id="{{ $course->id }}"
+                                    data-record="{{ json_encode([
                                         'course_number' => $course->course_number,
                                         'name' => $course->name,
                                         'day' => $course->day,
                                         'deadline' => $course->deadline ? $course->deadline->format('Y-m-d') : null,
                                         'area_id' => $course->area_id,
                                         'training_center_id' => $course->training_center_id
-                                    ]) }})">
+                                    ]) }}">
                                     <i class="fas fa-pen"></i>
                                 </button>
                                 <button type="button" class="btn btn-outline-danger btn-sm"
@@ -381,7 +386,8 @@
                             <td>{{ $apprentice->computer?->number }}</td>
                             <td class="text-end">
                                 <button type="button" class="btn btn-outline-primary btn-sm"
-                                    onclick="openEdit('apprentices', {{ $apprentice->id }}, {{ json_encode([
+                                    data-edit-table="apprentices" data-record-id="{{ $apprentice->id }}"
+                                    data-record="{{ json_encode([
                                         'name' => $apprentice->name,
                                         'surname' => $apprentice->surname,
                                         'document' => $apprentice->document,
@@ -391,7 +397,7 @@
                                         'cell' => $apprentice->cell,
                                         'course_id' => $apprentice->course_id,
                                         'computer_id' => $apprentice->computer_id
-                                    ]) }})">
+                                    ]) }}">
                                     <i class="fas fa-pen"></i>
                                 </button>
                                 <button type="button" class="btn btn-outline-danger btn-sm"
@@ -599,6 +605,16 @@ function openEdit(key, id, data) {
 
     showCrudModal();
 }
+
+document.querySelectorAll('[data-edit-table]').forEach((button) => {
+    button.addEventListener('click', () => {
+        openEdit(
+            button.dataset.editTable,
+            Number(button.dataset.recordId),
+            JSON.parse(button.dataset.record)
+        );
+    });
+});
 
 crudForm.addEventListener('submit', async (e) => {
     e.preventDefault();
